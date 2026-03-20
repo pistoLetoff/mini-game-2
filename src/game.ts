@@ -1,5 +1,5 @@
 import { SCREEN, S } from './screen';
-import { BASE, DOG, BAT, BEAR, COIN, WAVE, COLORS, MELEE, RANGED, VISUALS, FIGHTER_COST, MAX_FIGHTERS, DRAGON_COST, DRAGON_DAMAGE } from './balance';
+import { BASE, DOG, BAT, BEAR, COIN, WAVE, COLORS, MELEE, RANGED, VISUALS, FIGHTER_COST, MAX_FIGHTERS, DRAGON_COST, DRAGON_DAMAGE, DRAGON_COOLDOWN } from './balance';
 
 import { finger, tap, resetInput } from './input';
 import { getSprite } from './assets';
@@ -132,6 +132,7 @@ export class Game {
 
   // Dragon ability
   private dragon: DragonAbility | null = null;
+  private dragonCooldown: number = DRAGON_COOLDOWN; // starts on cooldown
 
   constructor(
     gameCanvas: HTMLCanvasElement,
@@ -158,6 +159,8 @@ export class Game {
     this.fighters = [];
     this.projectiles = [];
     this.coins = [];
+    this.dragon = null;
+    this.dragonCooldown = DRAGON_COOLDOWN;
 
     // Start with one free melee fighter (fist)
     const f = createFighter('fist', this.tX - 60, this.tY + 30);
@@ -194,9 +197,9 @@ export class Game {
   /* ── Dragon ability ────────────────────────────── */
 
   private activateDragon(): void {
-    if (this.gold < DRAGON_COST) return;
+    if (this.dragonCooldown > 0) return;  // still on cooldown
     if (this.dragon?.active) return; // already active
-    this.gold -= DRAGON_COST;
+    this.dragonCooldown = DRAGON_COOLDOWN;
 
     this.dragon = {
       active: true,
@@ -209,6 +212,8 @@ export class Game {
   }
 
   private updateDragon(dt: number): void {
+    if (this.dragonCooldown > 0) this.dragonCooldown -= dt;
+
     const d = this.dragon;
     if (!d || !d.active) return;
 
@@ -1158,8 +1163,17 @@ export class Game {
     // Ranged button
     this.drawBuyBtn(hud, startX + 2 * (btnSize + gap), btnY, btnSize, '🔫', 'Range', FIGHTER_COST, canBuy);
 
-    // Dragon button
-    this.drawBuyBtn(hud, startX + 3 * (btnSize + gap), btnY, btnSize, '🐉', 'Dragon', DRAGON_COST, this.gold >= DRAGON_COST);
+    // Dragon button (cooldown-based)
+    const dragonReady = this.dragonCooldown <= 0 && !this.dragon?.active;
+    const dragonX = startX + 3 * (btnSize + gap);
+    this.drawBuyBtn(hud, dragonX, btnY, btnSize, '🐉', 'Dragon', 0, dragonReady);
+    if (!dragonReady && !this.dragon?.active) {
+      // Draw cooldown timer overlay
+      hud.font = `bold ${S(10)}px monospace`;
+      hud.fillStyle = COLORS.text;
+      hud.textAlign = 'center';
+      hud.fillText(`${Math.ceil(this.dragonCooldown)}s`, dragonX + btnSize / 2, btnY + btnSize * 0.85);
+    }
 
     // Fighter count
     hud.fillStyle = COLORS.text;

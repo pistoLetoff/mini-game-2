@@ -17,8 +17,9 @@ export const BASE = {
 
 export const FIGHTER_COST = 5;   // gold to buy tier-0
 export const MAX_FIGHTERS = 5;
-export const DRAGON_COST = 30;
+export const DRAGON_COST = 0;
 export const DRAGON_DAMAGE = 50;
+export const DRAGON_COOLDOWN = 30;  // seconds
 
 /* ── MELEE BASE (tier 0 = fist) ───────────────── */
 
