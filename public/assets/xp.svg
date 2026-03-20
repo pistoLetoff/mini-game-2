@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12" width="12" height="12">
+  <!-- Glow -->
+  <circle cx="6" cy="6" r="5.5" fill="#00e5ff" opacity="0.2"/>
+  <!-- Orb -->
+  <circle cx="6" cy="6" r="4" fill="#00ccee" stroke="#0088aa" stroke-width="1"/>
+  <!-- Inner glow -->
+  <circle cx="6" cy="6" r="2.5" fill="#00e5ff" opacity="0.5"/>
+  <!-- Shine -->
+  <circle cx="5" cy="4.5" r="1.2" fill="#fff" opacity="0.4"/>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Base platform -->
+  <circle cx="32" cy="34" r="22" fill="#2a2a3a" stroke="#111" stroke-width="3"/>
+  <circle cx="32" cy="34" r="18" fill="#3a3a4e" stroke="#222" stroke-width="2"/>
+  <!-- Neon ring -->
+  <circle cx="32" cy="34" r="20" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity="0.6"/>
+  <!-- Turret body -->
+  <circle cx="32" cy="34" r="10" fill="#4a4a5e" stroke="#111" stroke-width="2.5"/>
+  <circle cx="32" cy="34" r="7" fill="#5a5a70" stroke="#333" stroke-width="1.5"/>
+  <!-- Gun barrel -->
+  <rect x="29" y="8" width="6" height="20" rx="2" fill="#4a4a5e" stroke="#111" stroke-width="2.5"/>
+  <rect x="30.5" y="6" width="3" height="6" rx="1" fill="#666" stroke="#111" stroke-width="2"/>
+  <!-- Muzzle glow -->
+  <circle cx="32" cy="8" r="3" fill="#ff4444" opacity="0.4"/>
+  <!-- Neon accents on turret -->
+  <circle cx="32" cy="34" r="4" fill="#00e5ff" opacity="0.3"/>
+  <circle cx="32" cy="34" r="2" fill="#00e5ff" opacity="0.6"/>
+  <!-- Rivets -->
+  <circle cx="24" cy="30" r="1.5" fill="#666" stroke="#111" stroke-width="1"/>
+  <circle cx="40" cy="30" r="1.5" fill="#666" stroke="#111" stroke-width="1"/>
+  <circle cx="28" cy="40" r="1.5" fill="#666" stroke="#111" stroke-width="1"/>
+  <circle cx="36" cy="40" r="1.5" fill="#666" stroke="#111" stroke-width="1"/>
+</svg>

@@ -1,53 +1,80 @@
-import { SCREEN, updateScreen } from './screen';
+import { SCREEN, BASE_W, BASE_H, updateScreen } from './screen';
+import { loadAssets } from './assets';
+import { loadSpineAssets } from './spine-loader';
+import { initInput } from './input';
+import { Game } from './game';
 
 const gameCanvas = document.getElementById('game-canvas') as HTMLCanvasElement;
 const hudCanvas = document.getElementById('hud-canvas') as HTMLCanvasElement;
-const ctx = gameCanvas.getContext('2d')!;
-const hud = hudCanvas.getContext('2d')!;
+const wrapper = document.getElementById('game-wrapper') as HTMLDivElement;
 
-function resize(): void {
-  const w = window.innerWidth;
-  const h = window.innerHeight;
-  updateScreen(w, h);
+let game: Game | null = null;
+let rafId = 0;
 
-  gameCanvas.width = SCREEN.w;
-  gameCanvas.height = SCREEN.h;
-  gameCanvas.style.width = w + 'px';
-  gameCanvas.style.height = h + 'px';
+function fitToScreen(): void {
+  const winW = window.innerWidth;
+  const winH = window.innerHeight;
+  const scale = Math.min(winW / BASE_W, winH / BASE_H);
+  const cssW = Math.round(BASE_W * scale);
+  const cssH = Math.round(BASE_H * scale);
 
-  hudCanvas.width = SCREEN.w;
-  hudCanvas.height = SCREEN.h;
-  hudCanvas.style.width = w + 'px';
-  hudCanvas.style.height = h + 'px';
+  wrapper.style.width = cssW + 'px';
+  wrapper.style.height = cssH + 'px';
 }
 
-resize();
-window.addEventListener('resize', resize);
+async function main(): Promise<void> {
+  if (rafId) cancelAnimationFrame(rafId);
 
-/* ── Game loop ─────────────────────────────────── */
+  updateScreen();
 
-let lastTime = 0;
+  // Canvas internal resolution = game size × DPR
+  const dpr = SCREEN.dpr;
+  gameCanvas.width = Math.round(BASE_W * dpr);
+  gameCanvas.height = Math.round(BASE_H * dpr);
+  hudCanvas.width = Math.round(BASE_W * dpr);
+  hudCanvas.height = Math.round(BASE_H * dpr);
 
-function loop(time: number): void {
-  const dt = Math.min((time - lastTime) / 1000, 0.1);
-  lastTime = time;
+  // CSS size = fixed game size (wrapper scales it)
+  gameCanvas.style.width = '100%';
+  gameCanvas.style.height = '100%';
+  hudCanvas.style.width = '100%';
+  hudCanvas.style.height = '100%';
 
-  // Clear
-  ctx.clearRect(0, 0, SCREEN.w, SCREEN.h);
-  hud.clearRect(0, 0, SCREEN.w, SCREEN.h);
+  // Load all assets in parallel
+  await Promise.all([
+    loadAssets(),
+    loadSpineAssets(),
+  ]);
 
-  // Placeholder
-  ctx.fillStyle = '#111';
-  ctx.fillRect(0, 0, SCREEN.w, SCREEN.h);
+  console.log('[mg2] All assets loaded');
 
-  hud.fillStyle = '#fff';
-  hud.font = `bold ${Math.round(24 * SCREEN.scale)}px monospace`;
-  hud.textAlign = 'center';
-  hud.fillText('Mini Game 2', SCREEN.w / 2, SCREEN.h / 2);
+  hudCanvas.style.pointerEvents = 'auto';
+  initInput(hudCanvas);
 
-  void dt; // will be used in game logic
+  game = new Game(gameCanvas, hudCanvas);
+  fitToScreen();
+  window.addEventListener('resize', fitToScreen);
 
-  requestAnimationFrame(loop);
+  let lastTime = performance.now();
+
+  function loop(): void {
+    const now = performance.now();
+    const dt = Math.min((now - lastTime) / 1000, 0.1);
+    lastTime = now;
+
+    game!.update(dt);
+    game!.draw();
+
+    rafId = requestAnimationFrame(loop);
+  }
+
+  rafId = requestAnimationFrame(loop);
 }
 
-requestAnimationFrame(loop);
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => {
+    if (rafId) cancelAnimationFrame(rafId);
+  });
+}
+
+main().catch((e) => console.error('[mg2] FATAL:', e));

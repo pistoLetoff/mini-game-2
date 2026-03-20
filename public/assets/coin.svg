@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <!-- Glow -->
+  <circle cx="8" cy="8" r="7.5" fill="#ffcc00" opacity="0.2"/>
+  <!-- Coin body -->
+  <circle cx="8" cy="8" r="6" fill="#ffcc00" stroke="#aa8800" stroke-width="1.5"/>
+  <!-- Inner ring -->
+  <circle cx="8" cy="8" r="4.5" fill="none" stroke="#ddaa00" stroke-width="0.8"/>
+  <!-- Dollar sign -->
+  <text x="8" y="11" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="8" font-weight="bold" fill="#aa7700">$</text>
+  <!-- Shine -->
+  <ellipse cx="6" cy="6" rx="2" ry="1.5" fill="#fff" opacity="0.3" transform="rotate(-30 6 6)"/>
+</svg>
