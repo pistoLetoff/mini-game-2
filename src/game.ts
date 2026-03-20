@@ -400,9 +400,9 @@ export class Game {
   }
 
   private pickMobType(): MobType {
-    // Wave 1-2: dogs only. Wave 3+: bats. Wave 5+: bears.
+    // Wave 1-2: dogs only. Wave 3+: bats+bears.
     const roll = Math.random();
-    if (this.wave >= 5 && roll < 0.15) return 'bear';
+    if (this.wave >= 3 && roll < 0.15) return 'bear';
     if (this.wave >= 3 && roll < 0.40) return 'bat';
     return 'dog';
   }
@@ -970,7 +970,7 @@ export class Game {
 
     for (const m of this.mobs) {
       // Per-mob sprite scale based on type
-      const targetH = m.mobType === 'bear' ? S(65) : m.mobType === 'bat' ? S(60) : S(VISUALS.mobTargetH);
+      const targetH = m.mobType === 'bear' ? S(65) : m.mobType === 'bat' ? S(30) : S(VISUALS.mobTargetH);
       const origH = m.mobType === 'bear' ? 760 : m.mobType === 'bat' ? 776 : 494;
       const origW = m.mobType === 'bear' ? 1048 : m.mobType === 'bat' ? 600 : 622;
       const spriteScale = targetH / origH;

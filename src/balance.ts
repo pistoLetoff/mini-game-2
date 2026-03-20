@@ -71,8 +71,8 @@ export const BAT = {
 
 export const BEAR = {
   speed: 50,
-  hp: 8,
-  damage: 3,
+  hp: 6,
+  damage: 2,
   attackRate: 1.2,
   hitRadius: 35,
   coinsDrop: [3, 5] as [number, number],
